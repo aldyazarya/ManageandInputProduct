@@ -1,28 +1,54 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
-import './App.css';
+
+
+import {BrowserRouter, Route} from 'react-router-dom' ;
+import cookies from 'universal-cookie'
+import {connect} from 'react-redux'
+
+import Header from './component/Header' ;
+import Home from './component/Home';
+import Login from './component/Login' ;
+import Register from './component/Register.js' ;
+import ManageProduct from './component/ManagePoduct'
+import {keepLogin} from './action'
+
+const cookie = new cookies()
+
 
 class App extends Component {
+
+  //life cycle method
+  componentDidMount() {
+    //akan di jalankan sekali ketika pertama kali component di render
+    //mengambil value yang disimpan pada file cookie masihLogin
+    var userCookie = cookie.get('masihLogin')
+    // jika didapatkan username di file cookie akan memanggil function keepLogin
+    if(userCookie !== undefined) {
+      console.log("cookie ada");
+      this.props.keepLogin(userCookie)
+      
+    }
+
+  }
+
+
+
+
   render() {
     return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
-      </div>
+      <BrowserRouter>
+        <div className="container">
+            {/* headernya tidak di route agar selalu muncul di tiap route yang dituju */}
+            <Header/>
+            {/* ditambahkan exact pada home agar homenya tidak ikut */}
+            <Route path="/" exact component={Home}/>
+            <Route path="/login" component={Login}/>
+            <Route path="/register" component={Register}/>
+            <Route path="/manageproduct" component={ManageProduct}/>
+        </div>
+      </BrowserRouter>
     );
   }
 }
 
-export default App;
+export default connect(null, {keepLogin}) (App)

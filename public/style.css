@@ -1,0 +1,8 @@
+table img.list {
+    width: 120px !important;
+}
+
+h6.note {
+    font-style: italic;
+    color: red;
+}
